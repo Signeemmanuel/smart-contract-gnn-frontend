@@ -33,6 +33,7 @@ system, so it stays light and fully themeable.
   `localStorage`, and is applied before first paint so there is no flash.
 - **Flaw reference.** Plain-language descriptions of all five DASP classes, served
   from `/flaws`, plus a short "how a contract is read" explainer.
+- **Light, dark & system themes.** A header control switches between Light, Dark, and System; the choice is remembered and System follows the OS setting live. An inline script applies the theme before first paint, so there's no flash.
 - **Quality floor.** Responsive to mobile, visible keyboard focus, reduced-motion
   respected, semantic colour per flaw class.
 
@@ -113,7 +114,7 @@ tokens file plus a small `useTheme` composable and the header toggle. The palett
 is a layered ink base with a teal "signal" primary, a violet secondary, and a
 five-hue ramp mapped one-to-one to the DASP classes (also exposed as
 `--flaw-<type>`). Type pairs Space Grotesk (display) with Inter (UI) and
-JetBrains Mono (code and data).
+JetBrains Mono (code and data). Both a dark and a hand-tuned light palette are defined as `[data-theme]` overrides, so the whole UI re-themes from one place; `useTheme` writes the effective theme to `<html data-theme>` and persists the preference.
 
 ## Deployment
 

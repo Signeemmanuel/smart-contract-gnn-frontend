@@ -33,7 +33,7 @@ const rows = computed(() => {
 
 <template>
   <div class="container status">
-    <header class="status__head">
+    <header class="status__head" v-reveal>
       <div>
         <p class="eyebrow">Service status</p>
         <h1 class="status__title">Backend health <BaseBadge :color="state.color">{{ state.label }}</BaseBadge></h1>
@@ -43,7 +43,7 @@ const rows = computed(() => {
 
     <p v-if="error" class="status__error">{{ error }} — the API may be asleep (free Spaces idle out); a refresh usually wakes it.</p>
 
-    <div v-if="health" class="status__grid card">
+    <div v-if="health" class="status__grid card" v-reveal="80">
       <div class="status__sha">
         <span class="muted">Serving commit</span>
         <code class="mono sha">{{ shortSha }}</code>

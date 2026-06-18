@@ -10,7 +10,7 @@ onMounted(load)
 
 <template>
   <div class="container ref">
-    <header class="ref__head">
+    <header class="ref__head" v-reveal>
       <p class="eyebrow">Reference</p>
       <h1 class="ref__title">The five flaw classes</h1>
       <p class="ref__sub">
@@ -23,7 +23,7 @@ onMounted(load)
     <p v-else-if="error" class="ref__error">{{ error }}</p>
 
     <div class="cards">
-      <article v-for="f in flaws" :key="f.type" class="rcard" :style="{ '--c': flawColor(f.type) }">
+      <article v-for="(f, idx) in flaws" :key="f.type" v-reveal="idx * 70" class="rcard" :style="{ '--c': flawColor(f.type) }">
         <div class="rcard__top">
           <h2 class="rcard__name">{{ f.name }}</h2>
           <BaseBadge :color="flawColor(f.type)">DASP-{{ f.dasp }}</BaseBadge>
@@ -33,7 +33,7 @@ onMounted(load)
       </article>
     </div>
 
-    <section class="how card">
+    <section class="how card" v-reveal>
       <h2 class="how__title">How a contract is read</h2>
       <ol class="how__steps">
         <li><strong>Compile &amp; parse.</strong> The contract is compiled with the matching solc and its syntax tree and control-flow graph are extracted.</li>
@@ -55,7 +55,7 @@ onMounted(load)
 .ref__title { font-size: clamp(1.8rem, 4vw, var(--fs-2xl)); margin: var(--s-3) 0; }
 .ref__sub { color: var(--text-dim); }
 .ref__error { color: var(--danger); }
-.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--s-4); margin-bottom: var(--s-6); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: var(--s-4); margin-bottom: var(--s-6); }
 .rcard { border: 1px solid var(--line); border-top: 3px solid var(--c); border-radius: var(--r-md); background: var(--surface); padding: var(--s-4); display: flex; flex-direction: column; gap: var(--s-2); }
 .rcard__top { display: flex; align-items: center; justify-content: space-between; gap: var(--s-2); }
 .rcard__name { font-size: var(--fs-md); }

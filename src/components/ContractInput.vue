@@ -1,21 +1,23 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { computed, ref } from 'vue'
 import BaseButton from './BaseButton.vue'
 import { SAMPLES, flawColor } from '@/constants/flaws'
 
 /**
  * Contract entry: a code textarea (with one-click samples and drag-drop), plus
- * a direct .sol upload. Exercises both backend submit endpoints:
+ * a direct .sol upload. The source text is v-modelled by the parent so it
+ * survives switching between the compose and results layouts.
  *  - "Run analysis" submits the textarea via POST /analyze
  *  - "Upload .sol" submits the file via POST /analyze/file
  */
 const props = defineProps({
+  source: { type: String, default: '' },
   busy: { type: Boolean, default: false },
   threshold: { type: Number, default: null },
 })
-const emit = defineEmits(['submit-source', 'submit-file', 'reset'])
+const emit = defineEmits(['update:source', 'submit-source', 'submit-file', 'reset'])
 
-const source = ref('')
+const source = computed({ get: () => props.source, set: (v) => emit('update:source', v) })
 const dragOver = ref(false)
 const fileInput = ref(null)
 
@@ -28,14 +30,12 @@ function runSource() { if (canRun.value) emit('submit-source', source.value) }
 function onPickFile(e) {
   const file = e.target.files?.[0]
   if (file) emit('submit-file', file)
-  e.target.value = '' // allow re-selecting the same file
+  e.target.value = ''
 }
-
 async function onDrop(e) {
   dragOver.value = false
   const file = e.dataTransfer?.files?.[0]
   if (!file) return
-  // Drag-drop loads the text so it can be edited before running.
   source.value = await file.text()
   emit('reset')
 }
@@ -94,6 +94,7 @@ async function onDrop(e) {
 .policy {
   font-size: var(--fs-xs); color: var(--signal); padding: 4px 10px; border-radius: var(--r-pill);
   background: color-mix(in srgb, var(--signal) 12%, transparent); border: 1px solid color-mix(in srgb, var(--signal) 28%, transparent);
+  white-space: nowrap;
 }
 .samples { display: flex; align-items: center; gap: var(--s-2); flex-wrap: wrap; }
 .samples__label { font-size: var(--fs-xs); color: var(--muted); margin-right: var(--s-1); }
@@ -117,7 +118,14 @@ async function onDrop(e) {
   background: color-mix(in srgb, var(--ink) 70%, transparent); color: var(--signal);
   font-family: var(--font-mono); font-size: var(--fs-sm); pointer-events: none;
 }
-.panel__foot { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); }
+.panel__foot { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); flex-wrap: wrap; }
 .count { font-size: var(--fs-xs); color: var(--faint); }
-.actions { display: flex; gap: var(--s-2); }
+.actions { display: flex; gap: var(--s-2); flex-wrap: wrap; }
+
+@media (max-width: 560px) {
+  .panel { padding: var(--s-4); }
+  .editor__area { min-height: 240px; }
+  .actions { flex: 1; }
+  .actions :deep(.btn) { flex: 1; }
+}
 </style>

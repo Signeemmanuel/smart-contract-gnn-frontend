@@ -52,7 +52,7 @@ watch(() => props.highlightLines, async (next) => {
 </template>
 
 <style scoped>
-.viewer { border: 1px solid var(--line); border-radius: var(--r-md); overflow: hidden; background: var(--ink); }
+.viewer { border: 1px solid var(--line); border-radius: var(--r-md); overflow: hidden; background: var(--ink); min-width: 0; max-width: 100%; }
 .viewer__bar {
   display: flex; align-items: center; gap: 7px; padding: 9px var(--s-4);
   background: var(--surface); border-bottom: 1px solid var(--line);
@@ -62,8 +62,8 @@ watch(() => props.highlightLines, async (next) => {
 .viewer__title { margin-left: 8px; font-size: var(--fs-xs); color: var(--text-dim); }
 .viewer__count { margin-left: auto; font-size: var(--fs-xs); color: var(--faint); }
 
-.viewer__body { position: relative; max-height: 560px; overflow: auto; padding: var(--s-3) 0; }
-.line { display: grid; grid-template-columns: 52px 1fr; align-items: baseline; padding: 0 var(--s-4); transition: background var(--t) var(--ease); }
+.viewer__body { position: relative; max-height: 560px; overflow: auto; padding: var(--s-3) 0; min-width: 0; }
+.line { display: grid; grid-template-columns: 52px 1fr; align-items: baseline; padding: 0 var(--s-4); transition: background var(--t) var(--ease); width: max-content; min-width: 100%; }
 .line__no { color: var(--faint); font-size: var(--fs-xs); text-align: right; padding-right: var(--s-4); user-select: none; }
 .line__code { color: var(--text-dim); font-size: var(--fs-sm); white-space: pre; tab-size: 4; }
 .line.hl { background: color-mix(in srgb, var(--hl) 14%, transparent); box-shadow: inset 3px 0 0 var(--hl); }

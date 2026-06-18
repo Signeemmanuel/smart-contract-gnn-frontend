@@ -70,4 +70,10 @@ const labels = { submitting: 'Submit', queued: 'Queue', running: 'Analyse', done
 .prog__note { font-size: var(--fs-xs); color: var(--signal); }
 .prog__error { display: flex; align-items: center; gap: var(--s-3); padding: var(--s-3) var(--s-4); border-radius: var(--r-md); background: color-mix(in srgb, var(--danger) 10%, transparent); border: 1px solid color-mix(in srgb, var(--danger) 30%, transparent); font-size: var(--fs-sm); color: var(--text); }
 .prog__error-code { color: var(--danger); font-size: var(--fs-xs); padding: 2px 8px; border-radius: var(--r-sm); background: color-mix(in srgb, var(--danger) 16%, transparent); flex: none; }
+
+@media (max-width: 480px) {
+  .steps { flex-wrap: wrap; gap: 6px 0; }
+  .step:not(:last-child)::after { width: 14px; margin: 0 5px; }
+  .step__label { font-size: 10px; }
+}
 </style>

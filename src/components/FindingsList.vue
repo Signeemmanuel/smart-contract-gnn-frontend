@@ -18,7 +18,7 @@ const emit = defineEmits(['activate', 'deactivate'])
   <div class="findings">
     <FlawCard
       v-for="(f, i) in flaws" :key="`${f.type}-${i}`"
-      :flaw="f" :meta="byType[f.type] || null" :active="activeFlaw === f"
+      :flaw="f" :meta="byType[f.type] || null" :active="activeFlaw === f" :index="i"
       @activate="emit('activate', f)" @deactivate="emit('deactivate', f)"
     />
   </div>

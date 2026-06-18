@@ -1,54 +1,38 @@
 import { ref, computed, watch } from 'vue'
 
 /**
- * Colour-mode controller. The user's *preference* is one of:
- *   'system' (default) | 'light' | 'dark'
- * The *resolved* theme is always a concrete 'light' | 'dark', with 'system'
- * tracking the OS setting live. The preference persists in localStorage; the
- * resolved theme is written to <html data-theme>. A matching inline script in
- * index.html applies it before first paint to prevent a flash.
- *
- * State is module-level, so every caller shares one source of truth.
+ * Theme controller. Preference is one of 'system' | 'light' | 'dark' and is
+ * persisted to localStorage; the *effective* theme ('light'|'dark') is written
+ * to <html data-theme>. In 'system' mode the effective theme tracks the OS
+ * setting live. The default is 'system'. An inline script in index.html applies
+ * the same logic before first paint to prevent a flash.
  */
-const KEY = 'scgnn-theme'
-const PREFERENCES = ['system', 'light', 'dark']
+const STORAGE_KEY = 'scgnn-theme'
+export const THEME_MODES = ['system', 'light', 'dark']
 
-const media = typeof window !== 'undefined' && window.matchMedia
-  ? window.matchMedia('(prefers-color-scheme: dark)')
-  : null
+const mode = ref('system')
+const system = ref('dark')
+let initialised = false
 
-function readStored() {
-  try { const v = localStorage.getItem(KEY); return PREFERENCES.includes(v) ? v : 'system' }
-  catch { return 'system' }
+const effective = () => (mode.value === 'system' ? system.value : mode.value)
+const apply = () => { if (typeof document !== 'undefined') document.documentElement.dataset.theme = effective() }
+
+function init() {
+  if (initialised || typeof window === 'undefined') return
+  initialised = true
+  const saved = localStorage.getItem(STORAGE_KEY)
+  if (THEME_MODES.includes(saved)) mode.value = saved
+  const mq = window.matchMedia('(prefers-color-scheme: dark)')
+  system.value = mq.matches ? 'dark' : 'light'
+  apply()
+  mq.addEventListener('change', (e) => { system.value = e.matches ? 'dark' : 'light'; if (mode.value === 'system') apply() })
+  watch(mode, (m) => { localStorage.setItem(STORAGE_KEY, m); apply() })
 }
-
-const preference = ref(readStored())
-const systemDark = ref(media ? media.matches : true)
-
-const resolved = computed(() =>
-  preference.value === 'system' ? (systemDark.value ? 'dark' : 'light') : preference.value,
-)
-
-function applyResolved() {
-  if (typeof document !== 'undefined') document.documentElement.setAttribute('data-theme', resolved.value)
-}
-
-// Keep up with OS changes while the user is on 'system'.
-if (media) {
-  const onChange = (e) => { systemDark.value = e.matches }
-  media.addEventListener ? media.addEventListener('change', onChange) : media.addListener(onChange)
-}
-
-// Persist preference + reflect any change to the DOM.
-watch([preference, systemDark], () => {
-  try {
-    if (preference.value === 'system') localStorage.removeItem(KEY)
-    else localStorage.setItem(KEY, preference.value)
-  } catch { /* storage unavailable — still apply for the session */ }
-  applyResolved()
-}, { immediate: true })
 
 export function useTheme() {
-  function setPreference(p) { if (PREFERENCES.includes(p)) preference.value = p }
-  return { preference, resolved, setPreference, PREFERENCES }
+  init()
+  const resolved = computed(() => effective())
+  const setMode = (m) => { if (THEME_MODES.includes(m)) mode.value = m }
+  const cycle = () => setMode(THEME_MODES[(THEME_MODES.indexOf(mode.value) + 1) % THEME_MODES.length])
+  return { mode, resolved, setMode, cycle, THEME_MODES }
 }

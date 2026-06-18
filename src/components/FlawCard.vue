@@ -16,6 +16,7 @@ const props = defineProps({
   flaw: { type: Object, required: true },
   meta: { type: Object, default: null },
   active: { type: Boolean, default: false },
+  index: { type: Number, default: 0 },
 })
 const emit = defineEmits(['activate', 'deactivate'])
 
@@ -27,7 +28,7 @@ const blurb = computed(() => FLAW_PRESENTATION[props.flaw.type]?.blurb || '')
 
 <template>
   <article
-    class="finding" :class="{ active }" :style="{ '--c': color }" tabindex="0"
+    class="finding" :class="{ active }" :style="{ '--c': color, '--i': index }" tabindex="0"
     @mouseenter="emit('activate')" @mouseleave="emit('deactivate')"
     @focus="emit('activate')" @blur="emit('deactivate')"
   >
@@ -51,7 +52,9 @@ const blurb = computed(() => FLAW_PRESENTATION[props.flaw.type]?.blurb || '')
   border: 1px solid var(--line); border-left: 3px solid var(--c); border-radius: var(--r-md);
   background: var(--surface); padding: var(--s-4); display: flex; flex-direction: column; gap: var(--s-3);
   transition: all var(--t) var(--ease); cursor: default;
+  animation: finding-in .5s var(--ease) both; animation-delay: calc(var(--i, 0) * 90ms);
 }
+@keyframes finding-in { from { opacity: 0; transform: translateY(18px) scale(0.98); } to { opacity: 1; transform: none; } }
 .finding:hover, .finding.active {
   background: var(--surface-2); transform: translateY(-1px);
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--c) 40%, transparent), var(--shadow-soft);

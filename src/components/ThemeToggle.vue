@@ -1,56 +1,57 @@
 <script setup>
 import { useTheme } from '@/composables/useTheme'
 
-/** Segmented System / Light / Dark control bound to the shared theme state. */
-const { preference, setPreference } = useTheme()
-const options = [
-  { key: 'system', label: 'System' },
-  { key: 'light', label: 'Light' },
-  { key: 'dark', label: 'Dark' },
+/**
+ * Segmented colour-theme control: System / Light / Dark. The active segment is
+ * the saved preference (System by default, which follows the OS setting live).
+ */
+const { mode, setMode } = useTheme()
+const OPTIONS = [
+  { id: 'system', title: 'Match system' },
+  { id: 'light', title: 'Light' },
+  { id: 'dark', title: 'Dark' },
 ]
 </script>
 
 <template>
-  <div class="tt" role="radiogroup" aria-label="Colour mode">
+  <div class="theme" role="group" aria-label="Colour theme">
     <button
-      v-for="o in options" :key="o.key" type="button" class="tt__btn"
-      :class="{ active: preference === o.key }" role="radio"
-      :aria-checked="preference === o.key" :title="`${o.label} theme`" @click="setPreference(o.key)"
+      v-for="o in OPTIONS" :key="o.id" type="button"
+      class="theme__seg" :class="{ active: mode === o.id }"
+      :aria-pressed="mode === o.id" :aria-label="o.title" :title="o.title"
+      @click="setMode(o.id)"
     >
-      <!-- System: monitor -->
-      <svg v-if="o.key === 'system'" viewBox="0 0 24 24" class="tt__icon" aria-hidden="true">
-        <rect x="3" y="4" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/>
-        <path d="M9 20h6M12 17v3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+      <svg v-if="o.id === 'system'" viewBox="0 0 24 24" class="theme__icon" aria-hidden="true">
+        <rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/>
+        <path d="M9 20h6M12 16v4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
       </svg>
-      <!-- Light: sun -->
-      <svg v-else-if="o.key === 'light'" viewBox="0 0 24 24" class="tt__icon" aria-hidden="true">
+      <svg v-else-if="o.id === 'light'" viewBox="0 0 24 24" class="theme__icon" aria-hidden="true">
         <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.7"/>
-        <path d="M12 2.6v2.4M12 19v2.4M4.6 4.6l1.7 1.7M17.7 17.7l1.7 1.7M2.6 12h2.4M19 12h2.4M4.6 19.4l1.7-1.7M17.7 6.3l1.7-1.7"
+        <path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5 5l1.8 1.8M17.2 17.2L19 19M19 5l-1.8 1.8M6.8 17.2L5 19"
           stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
       </svg>
-      <!-- Dark: moon -->
-      <svg v-else viewBox="0 0 24 24" class="tt__icon" aria-hidden="true">
-        <path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+      <svg v-else viewBox="0 0 24 24" class="theme__icon" aria-hidden="true">
+        <path d="M20 14.5A8 8 0 1 1 9.5 4a6.3 6.3 0 0 0 10.5 10.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
       </svg>
-      <span class="visually-hidden">{{ o.label }} theme</span>
     </button>
   </div>
 </template>
 
 <style scoped>
-.tt {
-  display: inline-flex; gap: 2px; padding: 3px; border-radius: var(--r-pill);
-  background: var(--surface-2); border: 1px solid var(--line);
+.theme {
+  display: inline-flex; align-items: center; gap: 2px; padding: 3px;
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-pill);
 }
-.tt__btn {
-  display: grid; place-items: center; width: 30px; height: 28px; border-radius: var(--r-pill);
-  color: var(--muted); background: transparent; border: 0; transition: all var(--t) var(--ease);
+.theme__seg {
+  display: inline-grid; place-items: center; width: 30px; height: 26px;
+  border: 0; background: transparent; color: var(--muted); border-radius: var(--r-pill);
+  transition: all var(--t) var(--ease);
 }
-.tt__btn:hover { color: var(--text); }
-.tt__btn.active {
-  color: var(--signal); background: var(--surface);
-  box-shadow: var(--shadow-soft), inset 0 0 0 1px color-mix(in srgb, var(--signal) 30%, transparent);
+.theme__seg:hover { color: var(--text); }
+.theme__seg.active {
+  color: var(--signal);
+  background: color-mix(in srgb, var(--signal) 16%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--signal) 32%, transparent);
 }
-.tt__icon { width: 16px; height: 16px; }
-@media (max-width: 560px) { .tt__btn { width: 26px; height: 26px; } }
+.theme__icon { width: 16px; height: 16px; }
 </style>
