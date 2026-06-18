@@ -1,0 +1,101 @@
+/* Design tokens — the single source of truth for colour, type, spacing and
+   motion. Colour tokens are theme-scoped: the dark palette is the default on
+   :root, and [data-theme="light"] overrides the colour set. Everything else
+   (type, spacing, radii, motion) is theme-agnostic. Components only ever
+   reference these variables, so adding a theme is a change in this one file. */
+
+:root {
+  /* ---- Type ---- */
+  --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+  --font-body:    'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  --fs-xs: 0.75rem;   --fs-sm: 0.83rem;  --fs-base: 0.94rem;
+  --fs-md: 1.06rem;   --fs-lg: 1.3rem;   --fs-xl: 1.7rem;
+  --fs-2xl: 2.4rem;   --fs-3xl: 3.2rem;
+
+  /* ---- Spacing (4px base) ---- */
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px; --s-4: 16px;
+  --s-5: 24px; --s-6: 32px; --s-7: 48px; --s-8: 64px;
+
+  /* ---- Radii, motion, layout ---- */
+  --r-sm: 6px; --r-md: 10px; --r-lg: 16px; --r-pill: 999px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --t-fast: 120ms; --t: 200ms; --t-slow: 380ms;
+  --maxw: 1240px;
+
+  /* ---- Colour: DARK (default) ---- */
+  color-scheme: dark;
+
+  --ink:        #0C1118;
+  --surface:    #141B26;
+  --surface-2:  #1C2533;
+  --surface-3:  #232E3F;
+  --line:       #283546;
+  --line-soft:  #1E2937;
+
+  --text:       #E6EDF3;
+  --text-dim:   #AEBCCF;
+  --muted:      #7E8DA3;
+  --faint:      #56657C;
+
+  --signal:     #2DD4BF;   /* teal primary */
+  --signal-ink: #06241F;   /* text on a signal-filled surface */
+  --violet:     #7C6CF0;
+  --sky:        #45C4FF;
+
+  --ok:         #36D399;
+  --warn:       #F7B955;
+  --danger:     #FF6B6B;
+
+  --flaw-reentrancy:      #FF6B6B;
+  --flaw-access_control:  #F7B955;
+  --flaw-arithmetic:      #9D8CFF;
+  --flaw-unchecked_calls: #45C4FF;
+  --flaw-dos:             #FF8FC8;
+
+  --shadow: 0 18px 40px -24px rgba(0,0,0,0.7);
+  --shadow-soft: 0 2px 10px -6px rgba(0,0,0,0.6);
+
+  /* ambient page glow (referenced by body in base.css) */
+  --glow-a: rgba(124,108,240,0.10);
+  --glow-b: rgba(45,212,191,0.08);
+}
+
+/* ---- Colour: LIGHT ---- */
+[data-theme="light"] {
+  color-scheme: light;
+
+  --ink:        #F3F6FB;   /* page background (cool off-white) */
+  --surface:    #FFFFFF;
+  --surface-2:  #EDF1F7;
+  --surface-3:  #DFE6EF;
+  --line:       #D3DBE6;
+  --line-soft:  #E5EAF1;
+
+  --text:       #0F1828;
+  --text-dim:   #3A4A5F;
+  --muted:      #5C6B81;
+  --faint:      #93A1B4;
+
+  --signal:     #0DA08F;   /* darker teal so it reads on white */
+  --signal-ink: #FFFFFF;
+  --violet:     #6655E6;
+  --sky:        #1C8FCE;
+
+  --ok:         #12A06A;
+  --warn:       #B0760F;
+  --danger:     #DD4257;
+
+  --flaw-reentrancy:      #D64141;
+  --flaw-access_control:  #B0760F;
+  --flaw-arithmetic:      #6655E6;
+  --flaw-unchecked_calls: #1C8FCE;
+  --flaw-dos:             #CE4E96;
+
+  --shadow: 0 16px 40px -24px rgba(15,24,40,0.22);
+  --shadow-soft: 0 1px 3px rgba(15,24,40,0.10);
+
+  --glow-a: rgba(102,85,230,0.06);
+  --glow-b: rgba(13,160,143,0.07);
+}
